@@ -1,4 +1,4 @@
-# [Homepage](https://danggoodcode.com/startpage)
-Homepage avaliable for use now at danggoodcode.com/startpage
+# Homepage
+My own adaption of the homepage created by Jaredk3nt.
 
-![homepage](https://i.redd.it/cbnzq36zj3601.gif)
+![homepage](https://imgur.com/PaeMvoL)
