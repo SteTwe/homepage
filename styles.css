@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
 body {
-    background-color: #5F4B8B;
+    background-image: url("img/solitude.jpg");
+    background-size: cover;
     margin: 0px;
+    background-position: center;
 }
 
 .container {
@@ -20,7 +22,8 @@ body {
     font-weight: 600;
     font-family: "Roboto Mono";
     color: #fff;
-    margin-bottom: .25em;
+    margin-bottom: 0.25em;
+    margin-top: 0.5em;
 }
 
 #search {
@@ -58,6 +61,7 @@ body {
     font-family: "Roboto Mono";
     color: #fff;
     text-align: center;
+    margin-bottom: .25em;
 }
 .inline {
     display: inline-block;
@@ -99,7 +103,7 @@ body {
     margin: 0em .5em;
 }
 .bookmark-inner-container {
-    overflow-y: scroll;
+    overflow-y: hidden;
     height: 80%;
     vertical-align: top;
 }

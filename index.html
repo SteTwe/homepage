@@ -8,48 +8,53 @@
     <title>Home</title>
     <link rel="stylesheet" href="styles.css">
     <link href="favicon.png" rel="shortcut icon" type="image/x-icon" />
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
     <div id="search">
         <input id="search-field" type="text" name="search-field" onkeypress="return search(event)"/>
     </div>
     <div class="container">
-        <div id="clock"></div>
+	<div id="clock"></div>
         <div class="weather-container">
             <div class="row">
                 <div id="weather-description"class="inline"></div>
                 <div class="inline">-</div>
                 <div id="temp" class="inline"></div>
+		<div id="location" class="inline"></div>
+		<div id="test" class="inline"></div>
             </div>
         </div>
         <div class="bookmark-container">
             <div class="bookmark-set">
                 <div class="bookmark-title">Daily</div>
                 <div class="bookmark-inner-container">
-                    <a class="bookmark" href="https://inbox.google.com/" target="_blank">Inbox</a>
-                    <a class="bookmark" href="https://github.com/" target="_blank">Github</a>
-                    <a class="bookmark" href="https://drive.google.com/" target="_blank">Drive</a>
+                    <a class="bookmark" href="https://mail.google.com/" target="_blank">Gmail</a>
+		    <a class="bookmark" href="https://vrtnws.be/" target="_blank">VRT Nws</a>
+		    <a class="bookmark" href="https://sporza.be/" target="_blank">Sporza</a>
                 </div>
             </div>
+	    <div class="bookmark-set">
+		<div class="bookmark-title">School</div>
+		<div class="bookmark-inner-container">
+		    <a class="bookmark" href="https://toledo.kuleuven.be/portal" target="_blank">Toledo</a>
+		    <a class="bookmark" href="https://intranet.ucll.be" target="_blank">Intranet</a>
+		    <a class="bookmark" href="https://rooster.ucll.be/student/personal?academicYear=2018" target="_blank">Uurrooster</a>
+		</div>
+	    </div>
             <div class="bookmark-set">
                 <div class="bookmark-title">Media</div>
                 <div class="bookmark-inner-container">
                     <a class="bookmark" href="https://youtube.com" target="_blank">Youtube</a>
-                    <a class="bookmark" href="https://netflix.com" target="_blank">Netflix</a>
-                    <a class="bookmark" href="https://crunchyroll.com" target="_blank">Crunchyroll</a>
-                    <a class="bookmark" href="https://" target="_blank">Amazon Prime</a>
+                    <a class="bookmark" href="https://netflix.com" target="_blank">Netflix</a>           
                 </div>
             </div>
             <div class="bookmark-set">
             <div class="bookmark-title">Reddit</div>
                 <div class="bookmark-inner-container">
-                    <a class="bookmark" href="https://reddit.com/r/overwatch" target="_blank">/r/overwatch</a>
                     <a class="bookmark" href="https://reddit.com/r/pcmasterrace" target="_blank">/r/pcmasterrace</a>
-                    <a class="bookmark" href="https://reddit.com/r/me_irl" target="_blank">/r/me_irl</a>
-                    <a class="bookmark" href="https://reddit.com/r/battlestations" target="_blank">/r/battlestations</a>
+                    <a class="bookmark" href="https://reddit.com/r/programmerhumor" target="_blank">/r/programmerhumor</a>
                     <a class="bookmark" href="https://reddit.com/r/unixporn" target="_blank">/r/unixporn</a>
-                    
-                    <a class="bookmark" href="https://reddit.com/r/news" target="_blank">/r/news</a>
                 </div>
             </div>
             <div class="bookmark-set">
@@ -82,25 +87,33 @@
                 (min < 10 ? ("0" + min) : min) + ":" + 
                 (sec < 10 ? ("0" + sec) : sec);
         }
+	function showWeather(position){
+		let xbr = new XMLHttpRequest();
+		let lon = position.coords.longitude;
+		let lat = position.coords.latitude;
+		xbr.open('GET', 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&units=metric&appid=e5b292ae2f9dae5f29e11499c2d82ece');
+		xbr.onload = () => {
+		    if (xbr.readyState === 4) {
+		        if (xbr.status === 200) {
+			    let json = JSON.parse(xbr.responseText);
+			    document.getElementById("temp").innerHTML = json.main.temp.toFixed(0) + " °C -";
+			    document.getElementById("weather-description").innerHTML = json.weather[0].description;
+			    document.getElementById("location").innerHTML = json.name;
+			} else {
+			    console.log('error msg: ' + xbr.status);
+		    	}
+   		    } 
+		}	
+		xbr.send();
+	}
+
 
         window.onload = () => {
-            let xhr = new XMLHttpRequest();
+	    // Get current location + open weathermap
+	    navigator.geolocation.getCurrentPosition(showWeather);
+	  
             // Request to open weather map
-            xhr.open('GET', 'http://api.openweathermap.org/data/2.5/weather?id=4737316&units=imperial&appid=e5b292ae2f9dae5f29e11499c2d82ece');
-            xhr.onload = () => {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        let json = JSON.parse(xhr.responseText);
-                        console.log(json);
-                        document.getElementById("temp").innerHTML = json.main.temp.toFixed(0) + " F";
-                        document.getElementById("weather-description").innerHTML = json.weather[0].description;
-                    } else {
-                        console.log('error msg: ' + xhr.status);
-                    }
-                }
-            }
-            xhr.send();
-            // Set up the clock
+	    // Set up the clock
             document.getElementById("clock").innerHTML = getTime();
             // Set clock interval to tick clock
             setInterval( () => {
